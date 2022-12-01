@@ -45,11 +45,11 @@ function createCountriesList(countries) {
 
 function createCountryInfo(countries) {
     // const languages = countries.map(({languages}) => Object.values(languages).join(", "));
+  
+    // const languages = Object.values(countries[0].languages);
 
-    const languages = Object.values(countries[0].languages);
-
-    const markup = `<img class="country-info-flag" src="" alt="">
-      <h1 class="country-info-name"></h1>
+    const markup = countries.map(country => `<img class="country-info-flag" src="${country.flag.svg}" alt="">
+      <h1 class="country-info-name">${country.name.official}</h1>
       <ul class="country-info-list">
         <li>
           <span class="country-info-item"></span>
@@ -63,7 +63,7 @@ function createCountryInfo(countries) {
           <span class="country-info-item"></span>
           <p class="country-info-value"></p>
         </li>
-      </ul>`;
+      </ul>`);
     
     refs.countryInfo.insertAdjacentHTML("beforeend", markup);
 }

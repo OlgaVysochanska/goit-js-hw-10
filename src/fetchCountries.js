@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export function fetchCountries(name) {
-    return fetch(`https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flag,languages`).then(resp => resp.json());
+    return axios.get(`https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flag,languages`).then(({data}) => data);
 }
