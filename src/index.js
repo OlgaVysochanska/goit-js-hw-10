@@ -25,15 +25,47 @@ function onInput(e) {
         return;
     }
 
-    fetchCountries(inputValue);
+    fetchCountries(inputValue).then(countries => {
+        console.log(countries);
+        if (countries.length === 1) {
+            createCountryInfo();
+            return;
+}
+    })
 }
 
 function createCountriesList(countries) {
-
+    const markup = countries.map(country => `<li class="country-item">
+        <img class="country-flag" src="" alt="flag">
+        <p class="country-name"></p>
+      </li>`).join(" ");
+    
+    refs.list.insertAdjacentHTML("beforeend", markup);
 }
 
 function createCountryInfo(countries) {
+    // const languages = countries.map(({languages}) => Object.values(languages).join(", "));
 
+    const languages = Object.values(countries[0].languages);
+
+    const markup = `<img class="country-info-flag" src="" alt="">
+      <h1 class="country-info-name"></h1>
+      <ul class="country-info-list">
+        <li>
+          <span class="country-info-item"></span>
+          <p class="country-info-value"></p>
+        </li>
+        <li>
+          <span class="country-info-item"></span>
+          <p class="country-info-value"></p>
+        </li>
+        <li>
+          <span class="country-info-item"></span>
+          <p class="country-info-value"></p>
+        </li>
+      </ul>`;
+    
+    refs.countryInfo.insertAdjacentHTML("beforeend", markup);
 }
 
 
@@ -43,8 +75,11 @@ function clearMarkup() {
 }
 
 function onError() {
-
+    clearMarkup();
+    Notify.failure("Oops, there is no country with that name");
 }
+
+
 
 
 /* <li class="country-item">
@@ -53,4 +88,21 @@ function onError() {
       </li> */
 
 
-      
+
+
+/* <img class="country-info-flag" src="" alt="">
+      <h1 class="country-info-name"></h1>
+      <ul class="country-info-list">
+        <li>
+          <span class="country-info-item"></span>
+          <p class="country-info-value"></p>
+        </li>
+        <li>
+          <span class="country-info-item"></span>
+          <p class="country-info-value"></p>
+        </li>
+        <li>
+          <span class="country-info-item"></span>
+          <p class="country-info-value"></p>
+        </li>
+      </ul> */
