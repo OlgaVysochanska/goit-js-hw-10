@@ -1,6 +1,5 @@
 import './css/styles.css';
 import { fetchCountries } from './fetchCountries';
-// var debounce = require('lodash.debounce');
 import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix';
 
@@ -25,43 +24,50 @@ function onInput(e) {
         return;
     }
 
-    fetchCountries(inputValue).then(countries => {
-        console.log(countries);
-        if (countries.length === 1) {
-            createCountryInfo();
-            return;
-}
-    })
+  fetchCountries(inputValue).then(countries => {
+    console.log(countries);
+    if (countries.length === 1) {
+      clearMarkup();
+      createCountryInfo(countries);
+      return;
+    } else if (countries.length > 1 && countries.length <= 10) {
+      clearMarkup();
+      createCountriesList(countries);
+      return;
+    } else if (countries.length > 10) {
+      clearMarkup();
+      Notify.info('Too many matches found. Please enter a more specific name.');
+      return;
+    }
+  }).catch(onError);
 }
 
 function createCountriesList(countries) {
     const markup = countries.map(country => `<li class="country-item">
-        <img class="country-flag" src="" alt="flag">
-        <p class="country-name"></p>
+        <img class="country-flag" src="${country.flags.svg}" alt="flag">
+        <p class="country-name">${country.name.official}</p>
       </li>`).join(" ");
     
     refs.list.insertAdjacentHTML("beforeend", markup);
 }
 
 function createCountryInfo(countries) {
-    // const languages = countries.map(({languages}) => Object.values(languages).join(", "));
-  
-    // const languages = Object.values(countries[0].languages);
+    const languages = Object.values(countries[0].languages).join(', ');
 
-    const markup = countries.map(country => `<img class="country-info-flag" src="${country.flag.svg}" alt="">
-      <h1 class="country-info-name">${country.name.official}</h1>
+    const markup = countries.map(country => `<div class="country-info-head"><img class="country-info-flag" src="${country.flags.svg}" alt="flag">
+      <h1 class="country-info-name">${country.name.official}</h1></div>
       <ul class="country-info-list">
         <li>
-          <span class="country-info-item"></span>
-          <p class="country-info-value"></p>
+          <p class="country-info-item">Capital: </p>
+          <span class="country-info-value">${country.capital}</span>
         </li>
         <li>
-          <span class="country-info-item"></span>
-          <p class="country-info-value"></p>
+          <p class="country-info-item">Population: </p>
+          <span class="country-info-value">${country.population}</span>
         </li>
         <li>
-          <span class="country-info-item"></span>
-          <p class="country-info-value"></p>
+          <p class="country-info-item">Languages: </p>
+          <span class="country-info-value">${languages}</span>
         </li>
       </ul>`);
     
@@ -78,31 +84,3 @@ function onError() {
     clearMarkup();
     Notify.failure("Oops, there is no country with that name");
 }
-
-
-
-
-/* <li class="country-item">
-        <img class="country-flag" src="" alt="">
-        <p class="country-name"></p>
-      </li> */
-
-
-
-
-/* <img class="country-info-flag" src="" alt="">
-      <h1 class="country-info-name"></h1>
-      <ul class="country-info-list">
-        <li>
-          <span class="country-info-item"></span>
-          <p class="country-info-value"></p>
-        </li>
-        <li>
-          <span class="country-info-item"></span>
-          <p class="country-info-value"></p>
-        </li>
-        <li>
-          <span class="country-info-item"></span>
-          <p class="country-info-value"></p>
-        </li>
-      </ul> */
