@@ -8,7 +8,7 @@ const DEBOUNCE_DELAY = 300;
 const refs = {
     input: document.querySelector('#search-box'),
     list: document.querySelector('.country-list'),
-    countryInfo: document.querySelector('.country-info'),
+  countryInfo: document.querySelector('.country-info'),
 }
 
 let inputValue = "";
@@ -43,12 +43,26 @@ function onInput(e) {
 }
 
 function createCountriesList(countries) {
-    const markup = countries.map(country => `<li class="country-item">
+    const markup = countries.map(country => `<button type="button" class="country-item">
         <img class="country-flag" src="${country.flags.svg}" alt="flag">
         <p class="country-name">${country.name.official}</p>
-      </li>`).join(" ");
+      </button>`).join(" ");
     
-    refs.list.insertAdjacentHTML("beforeend", markup);
+  refs.list.insertAdjacentHTML("beforeend", markup);
+
+  refs.list.addEventListener("click", onListElementClick);
+
+function onListElementClick(e) {
+  clearMarkup();
+
+  const chosenCountry = e.target.lastChild.textContent;
+  console.log(chosenCountry);
+  fetchCountries(chosenCountry).then(countries => {
+    clearMarkup();
+    createCountryInfo(countries);
+    return;
+  }).catch(onError);
+}
 }
 
 function createCountryInfo(countries) {
@@ -84,3 +98,9 @@ function onError() {
     clearMarkup();
     Notify.failure("Oops, there is no country with that name");
 }
+
+
+
+
+
+ 
